@@ -1,7 +1,7 @@
 import express from 'express';
 import { getClient } from '../db';
 import { ObjectId } from 'mongodb';
-import EventInterface from '../models/EventInterface';
+import Event from '../models/EventInterface';
 
 const routes = express.Router();
 
