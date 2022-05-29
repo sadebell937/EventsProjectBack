@@ -1,6 +1,6 @@
 import express from 'express';
 import { getClient } from '../db';
-import { ObjectId } from 'mongodb';
+// import { ObjectId } from 'mongodb';
 import UserPreference from '../models/UserPreference';
 
 const routes = express.Router();
@@ -24,3 +24,5 @@ routes.get('/preferences', async (req,res) => {
     }
 
 })
+
+export default routes;
