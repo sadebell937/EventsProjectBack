@@ -4,9 +4,7 @@ export default interface UserPreference {
     id?: ObjectId;
     postal_code: string;
     event: string[];
-    taxonomies:{genre?: string[],
-                sport?: string[]};
-    
-    event_size?: number;
+    genre?: string[],
+    sport?: string[];
 }
 

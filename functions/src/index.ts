@@ -1,9 +1,13 @@
 import * as functions from 'firebase-functions';
 import express from 'express';
 import cors from 'cors';
+<<<<<<< HEAD
 // import eventsRoutes from './routes/events'
 import preferencesRoutes from './routes/preferences';
 
+=======
+import preferencesRoutes from './routes/events'
+>>>>>>> 563f641d10e31495b136726d8e5099cdf07045ca
 
 
 const app = express();
