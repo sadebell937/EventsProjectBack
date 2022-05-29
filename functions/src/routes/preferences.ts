@@ -4,16 +4,14 @@ import UserPreference from '../models/UserPreference';
 
 const routes = express.Router();
 
-routes.get('/preferences', async (req,res) => {
-    const postal_code = String(req.query.postal_code || "");
-    const event = String(req.query.event || "");
-    const genre = String(req.query.genre || "");
-    const sport = String(req.query.sport || "");
+routes.get('/preferences/:id', async (req,res) => {
+    const userId = req.params.id;
+    
     try {
         const client = await getClient();
         const results = await client.db()
                         .collection<UserPreference>('preferences')
-                        .find({postal_code:postal_code, event: event,genre:genre,sport:sport})
+                        .find({id: userId})
                         .toArray();
         res.json(results);           
     } catch(err) {
