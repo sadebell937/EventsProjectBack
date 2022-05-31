@@ -2,8 +2,8 @@ import express from 'express';
 import { getClient } from '../db';
 import { ObjectId } from 'mongodb';
 import Event from '../models/EventInterface';
-import UserPreference from '../models/UserPreference';
-import { UserFavorites } from '../models/UserFavorites';
+import UserPreference from '../models/EventInterface';
+import { UserFavorites } from '../models/EventInterface';
 
 const routes = express.Router();
 
@@ -51,7 +51,7 @@ routes.get('/favorites/:id', async (req,res) => {
     }
 })
 
-routes.post('/favorites/', async (req,res) => {
+routes.post('/favorites', async (req,res) => {
     const favorite = req.body as UserPreference;
     try {
         const client = await getClient();
@@ -64,6 +64,8 @@ routes.post('/favorites/', async (req,res) => {
         res.status(500).json({message: 'Internal Server Error'})
     }
 })
+
+
 
 
 
@@ -101,6 +103,26 @@ routes.post('/preferences', async (req,res) => {
         console.error('Error',err);
         res.status(500).json({message: 'Internal Server Error'})
     }
+})
+
+routes.put('/favorites/:id', async(req,res) => {
+    const id = req.params.id;
+    const data = req.body as UserFavorites;
+    try {
+        const client = await getClient();
+        const result = await client.db().collection<UserFavorites>('favorites')
+                       .updateOne({_id:id},{$push:{event:data}});
+        if (result.modifiedCount === 0) {
+            res.status(404).json({message:"Not Found"});
+
+        } else {
+            res.json(data);
+        }
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+    
 })
 
 export default routes;
