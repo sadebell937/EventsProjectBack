@@ -1,8 +1,8 @@
 import express from 'express';
 import { getClient } from '../db';
 import { ObjectId } from 'mongodb';
-import Event from '../models/EventInterface';
-import UserPreference from '../models/EventInterface';
+import {Event} from '../models/EventInterface';
+import {UserPreference} from '../models/EventInterface';
 import { UserFavorites } from '../models/EventInterface';
 
 const routes = express.Router();
@@ -81,7 +81,7 @@ routes.get('/preferences/:id', async (req,res) => {
         const client = await getClient();
         const results = await client.db()
                         .collection<UserPreference>('preferences')
-                        .find({id:userId})
+                        .find({_id: userId})
                         .toArray();
         res.json(results);           
     } catch(err) {
