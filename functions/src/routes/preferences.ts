@@ -107,11 +107,11 @@ routes.post('/preferences', async (req,res) => {
 
 routes.put('/favorites/:id', async(req,res) => {
     const id = req.params.id;
-    const data = req.body as UserFavorites;
+    const data = req.body as Event;
     try {
         const client = await getClient();
         const result = await client.db().collection<UserFavorites>('favorites')
-                       .updateOne({_id:id},{$push:{event:data}});
+                       .updateOne({_id:id},{$push:{favoriteEvents:data}});
         if (result.modifiedCount === 0) {
             res.status(404).json({message:"Not Found"});
 
@@ -124,5 +124,22 @@ routes.put('/favorites/:id', async(req,res) => {
     }
     
 })
+
+/*routes.delete('/favorites/:id', async(req,res) => {
+    const id = req.params.id;
+    try {
+        const client = await getClient();
+        const result = await client.db().collection<Event>('favorites')
+                       .updateOne({_id:id},{$pull:{favoriteEvents:{type:type}}});
+        if (result.deletedCount === 0) {
+            res.status(404).json({message:"Not Found"});
+        } else {
+            res.status(204).end();
+        } 
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    } 
+})*/
 
 export default routes;
