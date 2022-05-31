@@ -1,7 +1,9 @@
-import express from 'express';
+/*import express from 'express';
 import { getClient } from '../db';
 import { ObjectId } from 'mongodb';
 import Event from '../models/EventInterface';
+import UserPreference from '../models/UserPreference';
+import { UserFavorites } from '../models/UserFavorites';
 
 const routes = express.Router();
 
@@ -34,10 +36,42 @@ routes.get('/events/:id', async (req,res) => {
     }
 })
 
+routes.get('/favorites/:id', async (req,res) => {
+    const id =req.params.id;
+    try {
+        const client = await getClient();
+        const results = await client.db()
+                                .collection<UserFavorites>('favorites')
+                                .find({id:id}).toArray();
+        res.json(results);                        
+    } catch (err) {
+        console.error('Error',err)
+        res.status(500).json({message:'Internal Server Error'})
+    }
+})
+
+routes.post('/favorites/', async (req,res) => {
+    const favorite = req.body as UserPreference;
+    try {
+        const client = await getClient();
+        await client.db()
+            .collection<UserPreference>('favorites')
+            .insertOne(favorite);
+        res.status(201).json(favorite)
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
 
 
 
 
 
 
-export default routes
+
+
+
+
+
+export default routes*/

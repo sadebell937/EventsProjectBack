@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 // for any of these that had an id: number, I changed them to _id?: ObjectID. Just wanted to note in case it winds up causing any issues.
 
-export default interface Event {
+export interface Event {
     _id?: ObjectId;
     type: string;
     venue: Venue;
@@ -50,4 +50,17 @@ export interface Taxonomies{
     name: string;
     parent_id: number;
     rank: number;
+}
+
+export interface UserFavorites{
+    _id?: string;
+    favoriteEvents: Event[];
+}
+
+export interface UserPreference {
+    _id?: string;
+    postal_code: string;
+    event: string[];
+    genre?: string[],
+    sport?: string[];
 }
