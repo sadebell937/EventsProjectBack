@@ -5,6 +5,7 @@ import {Event} from '../models/EventInterface';
 import {UserPreference} from '../models/EventInterface';
 import { UserFavorites } from '../models/EventInterface';
 
+
 const routes = express.Router();
 
 
@@ -103,6 +104,7 @@ routes.post('/preferences', async (req,res) => {
         res.status(500).json({message: 'Internal Server Error'})
     }
 })
+
 
 routes.put('/favorites/:id', async(req,res) => {
     const id = req.params.id;
