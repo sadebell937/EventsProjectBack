@@ -39,12 +39,12 @@ routes.get('/events/:id', async (req,res) => {
 })
 
 routes.get('/favorites/:id', async (req,res) => {
-    const id =req.params.id;
+    const userId = req.params.id;
     try {
         const client = await getClient();
         const results = await client.db()
                                 .collection<UserFavorites>('favorites')
-                                .findOne({id:id});
+                                .findOne({id: userId})
         res.json(results);                        
     } catch (err) {
         console.error('Error',err)
