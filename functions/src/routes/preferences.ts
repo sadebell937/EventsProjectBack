@@ -25,7 +25,7 @@ routes.get('/events/:id', async (req,res) => {
     const id = req.params.id;
     try {
         const client = await getClient();
-        const event = await client.db().collection<Event>('events').findOne({_id: new ObjectId(id)});
+        const event = await client.db().collection<Event>('events').findOne({id: new ObjectId(id)});
         if(event) {
             res.json(event);
         } else {
@@ -43,7 +43,7 @@ routes.get('/favorites/:id', async (req,res) => {
         const client = await getClient();
         const results = await client.db()
                                 .collection<UserFavorites>('favorites')
-                                .find({id:id}).toArray();
+                                .findOne({id:id});
         res.json(results);                        
     } catch (err) {
         console.error('Error',err)
@@ -81,8 +81,7 @@ routes.get('/preferences/:id', async (req,res) => {
         const client = await getClient();
         const results = await client.db()
                         .collection<UserPreference>('preferences')
-                        .find({_id: userId})
-                        .toArray();
+                        .findOne({id: userId})
         res.json(results);           
     } catch(err) {
         console.error('Error',err);
@@ -111,7 +110,7 @@ routes.put('/favorites/:id', async(req,res) => {
     try {
         const client = await getClient();
         const result = await client.db().collection<UserFavorites>('favorites')
-                       .updateOne({_id:id},{$push:{favoriteEvents:data}});
+                       .updateOne({id:id},{$push:{favoriteEvents:data}});
         if (result.modifiedCount === 0) {
             res.status(404).json({message:"Not Found"});
 
@@ -130,7 +129,7 @@ routes.put('/favorites/:id', async(req,res) => {
     try {
         const client = await getClient();
         const result = await client.db().collection<Event>('favorites')
-                       .updateOne({_id:id},{$pull:{favoriteEvents:{type:type}}});
+                       .updateOne({id:id},{$pull:{favoriteEvents:{type:type}}});
         if (result.deletedCount === 0) {
             res.status(404).json({message:"Not Found"});
         } else {

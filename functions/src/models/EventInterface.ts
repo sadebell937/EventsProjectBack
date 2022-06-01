@@ -53,12 +53,12 @@ export interface Taxonomies{
 }
 
 export interface UserFavorites{
-    _id?: string;
+    id: string;
     favoriteEvents: Event[];
 }
 
 export interface UserPreference {
-    _id?: string;
+    id: string;
     postal_code: string;
     event: string[];
     genre?: string[],
