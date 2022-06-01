@@ -26,7 +26,7 @@ routes.get('/events/:id', async (req,res) => {
     const id = req.params.id;
     try {
         const client = await getClient();
-        const event = await client.db().collection<Event>('events').findOne({id: new ObjectId(id)});
+        const event = await client.db().collection<Event>('events').findOne({_id: new ObjectId(id)});
         if(event) {
             res.json(event);
         } else {
@@ -126,13 +126,14 @@ routes.put('/favorites/:id', async(req,res) => {
     
 })
 
-/*routes.delete('/favorites/:id', async(req,res) => {
+routes.delete('/favorites/:id', async(req,res) => {
     const id = req.params.id;
+    const eventId = req.body as Event;
     try {
         const client = await getClient();
-        const result = await client.db().collection<Event>('favorites')
-                       .updateOne({id:id},{$pull:{favoriteEvents:{type:type}}});
-        if (result.deletedCount === 0) {
+        const result = await client.db().collection<UserFavorites>('favorites')
+                       .updateOne({id:id},{$pull:{favoriteEvents:{id:eventId.id}}});
+        if (result.modifiedCount === 0) {
             res.status(404).json({message:"Not Found"});
         } else {
             res.status(204).end();
@@ -141,6 +142,6 @@ routes.put('/favorites/:id', async(req,res) => {
         console.error('Error',err);
         res.status(500).json({message: 'Internal Server Error'})
     } 
-})*/
+})
 
 export default routes;

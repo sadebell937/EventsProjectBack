@@ -12,6 +12,7 @@ export interface Event {
     title: string;
     popularity: number;
     description: string;
+    id:number;
 }
 
 export interface Venue{
