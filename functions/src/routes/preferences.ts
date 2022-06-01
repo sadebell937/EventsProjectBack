@@ -53,11 +53,11 @@ routes.get('/favorites/:id', async (req,res) => {
 })
 
 routes.post('/favorites', async (req,res) => {
-    const favorite = req.body as UserPreference;
+    const favorite = req.body as UserFavorites;
     try {
         const client = await getClient();
         await client.db()
-            .collection<UserPreference>('favorites')
+            .collection<UserFavorites>('favorites')
             .insertOne(favorite);
         res.status(201).json(favorite)
     } catch (err) {
