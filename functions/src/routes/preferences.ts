@@ -67,45 +67,6 @@ routes.post('/favorites', async (req,res) => {
 })
 
 
-
-
-
-
-
-
-
-
-
-routes.get('/preferences/:id', async (req,res) => {
-    const userId = req.params.id;
-    try {
-        const client = await getClient();
-        const results = await client.db()
-                        .collection<UserPreference>('preferences')
-                        .findOne({id: userId})
-        res.json(results);           
-    } catch(err) {
-        console.error('Error',err);
-        res.status(500).json({message: 'Internal Server Error'})
-    }
-
-})
-
-routes.post('/preferences', async (req,res) => {
-    const preference = req.body as UserPreference;
-    try {
-        const client = await getClient();
-        await client.db()
-            .collection<UserPreference>('preferences')
-            .insertOne(preference);
-        res.status(201).json(preference)
-    } catch (err) {
-        console.error('Error',err);
-        res.status(500).json({message: 'Internal Server Error'})
-    }
-})
-
-
 routes.put('/favorites/:id', async(req,res) => {
     const id = req.params.id;
     const data = req.body as Event;
@@ -143,5 +104,56 @@ routes.delete('/favorites/:id/:eventId', async(req,res) => {
         res.status(500).json({message: 'Internal Server Error'})
     } 
 })
+
+
+routes.get('/preferences/:id', async (req,res) => {
+    const userId = req.params.id;
+    try {
+        const client = await getClient();
+        const results = await client.db()
+                        .collection<UserPreference>('preferences')
+                        .findOne({id: userId})
+        res.json(results);           
+    } catch(err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+
+})
+
+routes.post('/preferences', async (req,res) => {
+    const preference = req.body as UserPreference;
+    try {
+        const client = await getClient();
+        await client.db()
+            .collection<UserPreference>('preferences')
+            .insertOne(preference);
+        res.status(201).json(preference)
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+routes.put('/preferences/:id', async(req,res) => {
+    const id = req.params.id;
+    const changedPreference = req.body as UserPreference;
+    try {
+        const client = await getClient();
+        const result = await client.db().collection<UserPreference>('preferences')
+                       .replaceOne({id:id}, changedPreference);
+        if (result.modifiedCount === 0) {
+            res.status(404).json({message:"Not Found"});
+
+        } else {
+            res.json(changedPreference);
+        }
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+    
+})
+
 
 export default routes;
