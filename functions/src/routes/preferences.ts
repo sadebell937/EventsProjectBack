@@ -126,13 +126,13 @@ routes.put('/favorites/:id', async(req,res) => {
     
 })
 
-routes.delete('/favorites/:id', async(req,res) => {
+routes.delete('/favorites/:id/:eventId', async(req,res) => {
     const id = req.params.id;
-    const eventId = req.body as Event;
+    const removedEvent = Number(req.params.eventId);
     try {
         const client = await getClient();
         const result = await client.db().collection<UserFavorites>('favorites')
-                       .updateOne({id:id},{$pull:{favoriteEvents:{id:eventId.id}}});
+                       .updateOne({id:id},{$pull:{favoriteEvents:{id:removedEvent}}});
         if (result.modifiedCount === 0) {
             res.status(404).json({message:"Not Found"});
         } else {
