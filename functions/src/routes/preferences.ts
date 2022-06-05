@@ -162,7 +162,7 @@ routes.get('/reviews/:eventId', async (req,res) => {
         const client = await getClient();
         const results = await client.db()
                         .collection<EventReviews>('reviews')
-                        .findOne({id: eventId})
+                        .findOne({eventId: eventId})
         res.json(results);           
     } catch(err) {
         console.error('Error',err);
@@ -173,7 +173,7 @@ routes.get('/reviews/:eventId', async (req,res) => {
 
 //Get user's review for event
 routes.get('/reviews/:id/:eventId', async (req,res) => {
-    const id = req.params.id;
+   // const id = req.params.id;
     const eventId = Number(req.params.eventId);
     try {
         const client = await getClient();
@@ -209,7 +209,7 @@ routes.put('/reviews/:eventId', async(req,res) => {
     try {
         const client = await getClient();
         const result = await client.db().collection<EventReviews>('reviews')
-                       .updateOne({id:id},{$push:{reviews:data}});
+                       .updateOne({eventId:id},{$push:{reviews:data}});
         if (result.modifiedCount === 0) {
             res.status(404).json({message:"Not Found"});
 
