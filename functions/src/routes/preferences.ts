@@ -1,7 +1,7 @@
 import express from 'express';
 import { getClient } from '../db';
 import { ObjectId } from 'mongodb';
-import {Event} from '../models/EventInterface';
+import {Event, EventReviews, Review} from '../models/EventInterface';
 import {UserPreference} from '../models/EventInterface';
 import { UserFavorites } from '../models/EventInterface';
 
@@ -155,5 +155,72 @@ routes.put('/preferences/:id', async(req,res) => {
     
 })
 
+//Get all reviews for event
+routes.get('/reviews/:eventId', async (req,res) => {
+    const eventId = Number(req.params.eventId);
+    try {
+        const client = await getClient();
+        const results = await client.db()
+                        .collection<EventReviews>('reviews')
+                        .findOne({id: eventId})
+        res.json(results);           
+    } catch(err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+
+})
+
+//Get user's review for event
+routes.get('/reviews/:id/:eventId', async (req,res) => {
+    const id = req.params.id;
+    const eventId = Number(req.params.eventId);
+    try {
+        const client = await getClient();
+        const results = await client.db()
+                        .collection<EventReviews>('reviews')
+                        .findOne({id:eventId})
+        res.json(results);           
+    } catch(err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+
+})
+//Add user's review
+routes.post('/reviews', async (req,res) => {
+    const review = req.body as EventReviews;
+    try {
+        const client = await getClient();
+        await client.db()
+            .collection<EventReviews>('reviews')
+            .insertOne(review);
+        res.status(201).json(review)
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+
+routes.put('/reviews/:eventId', async(req,res) => {
+    const id = Number(req.params.eventId);
+    const data = req.body as Review;
+    try {
+        const client = await getClient();
+        const result = await client.db().collection<EventReviews>('reviews')
+                       .updateOne({id:id},{$push:{reviews:data}});
+        if (result.modifiedCount === 0) {
+            res.status(404).json({message:"Not Found"});
+
+        } else {
+            res.json(data);
+        }
+    } catch (err) {
+        console.error('Error',err);
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+    
+})
 
 export default routes;
